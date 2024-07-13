@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Next" pattern="file[issue-tracker]:app//*||file:tailwind.config.ts" />
+</component>
