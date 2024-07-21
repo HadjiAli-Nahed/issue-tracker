@@ -1,8 +1,6 @@
 import React from 'react'
-import { Button, Table } from "@radix-ui/themes";
-import Skeleton from "react-loading-skeleton";
-import 'react-loading-skeleton/dist/skeleton.css'
-import Link from "next/link";
+import { Table } from "@radix-ui/themes";
+import { Skeleton } from "@/app/components";
 import IssueActions from "@/app/issues/IssueActions";
 
 const LoadingIssuesPage = () => {
