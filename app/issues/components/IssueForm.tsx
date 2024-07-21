@@ -1,31 +1,36 @@
 'use client'
-import { useRouter } from 'next/navigation';
-import { Button, TextField, Callout } from "@radix-ui/themes";
-import SimpleMDE from 'react-simplemde-editor';
-import 'easymde/dist/easymde.min.css'
-import axios from 'axios';
-import { useForm, Controller } from 'react-hook-form';
-import { useState } from "react";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { issueSchema } from "@/app/validationSchema";
-import { z } from 'zod';
 import { ErrorMessage } from "@/app/components";
 import { Spinner } from "@/app/components";
+import { issueSchema } from "@/app/validationSchema";
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from "@prisma/client";
+import { Button, TextField, Callout } from "@radix-ui/themes";
+import axios from 'axios';
+import 'easymde/dist/easymde.min.css'
+import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { useForm, Controller } from 'react-hook-form';
+import SimpleMDE from 'react-simplemde-editor';
+import { z } from 'zod';
 
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
+
 const IssueForm = ({issue}: { issue?: Issue }) => {
 	const router = useRouter()
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState: {errors},
+	} = useForm<IssueFormData>({
+		resolver: zodResolver(issueSchema)
+	});
+	const [error, setError] = useState('');
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const [error, setError] = useState('');
-
-	const {register, control, handleSubmit, formState: {errors}} = useForm<IssueFormData>({
-		resolver: zodResolver(issueSchema)
-	});
 	const onSubmit = handleSubmit(async (data) => {
 		try {
 			setIsSubmitting(true);
@@ -34,14 +39,13 @@ const IssueForm = ({issue}: { issue?: Issue }) => {
 			} else {
 				await axios.post('/api/issues', data);
 			}
-
 			router.push('/issues');
+			router.refresh();
 		} catch (error) {
 			setIsSubmitting(false)
 			setError('An unexpected error has occurred.')
 		}
 	})
-
 
 	return (
 
